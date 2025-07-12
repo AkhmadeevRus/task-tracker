@@ -163,3 +163,34 @@ func UpdateTaskDescription(id int64, description string) error {
 	fmt.Print("\nTask updated successfully\n\n")
 	return WriteTasksToFile(updatedTask)
 }
+
+func UpdateTaskStatus(id int64, status TaskStatus) error {
+	tasks, err := ReadTaskFromFile()
+	if err != nil {
+		return err
+	}
+
+	var taskExists bool = false
+	var updatedTasks []Task
+	for _, task := range tasks {
+		if task.ID == id {
+			taskExists = true
+			switch status {
+			case TASK_STATUS_DONE:
+				task.Status = TASK_STATUS_DONE
+			case TASK_STATUS_IN_PROGRESS:
+				task.Status = TASK_STATUS_IN_PROGRESS
+			case TASK_STATUS_TODO:
+				task.Status = TASK_STATUS_TODO
+			}
+			task.UpdatedAt = time.Now()
+		}
+		updatedTasks = append(updatedTasks, task)
+	}
+
+	if !taskExists {
+		fmt.Printf("\ntask by id %d not found\n\n", id)
+	}
+	fmt.Print("\nTask updated successfully\n\n")
+	return WriteTasksToFile(updatedTasks)
+}
