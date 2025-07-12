@@ -138,3 +138,28 @@ func DeleteTaskById(id int64) error {
 	fmt.Println("\nTask deleted successfully")
 	return WriteTasksToFile(newTasks)
 }
+
+func UpdateTaskDescription(id int64, description string) error {
+	tasks, err := ReadTaskFromFile()
+	if err != nil {
+		return err
+	}
+
+	var taskExists bool = false
+	var updatedTask []Task
+	for _, task := range tasks {
+		if task.ID == id {
+			taskExists = true
+			task.Description = description
+			task.UpdatedAt = time.Now()
+		}
+		updatedTask = append(updatedTask, task)
+	}
+
+	if !taskExists {
+		fmt.Printf("\ntask by id %d not found\n\n", id)
+		return nil
+	}
+	fmt.Print("\nTask updated successfully\n\n")
+	return WriteTasksToFile(updatedTask)
+}
