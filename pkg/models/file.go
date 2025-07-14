@@ -21,7 +21,7 @@ func ReadTaskFromFile() ([]Task, error) {
 	filePath := getTaskFilePath()
 	_, err := os.Stat(filePath)
 
-	if err != os.ErrNotExist {
+	if os.IsNotExist(err) {
 		fmt.Println("file dosen't exist. Creating new file...")
 		file, err := os.Create(filePath)
 		os.WriteFile(filePath, []byte("[]"), os.ModeAppend.Perm())
